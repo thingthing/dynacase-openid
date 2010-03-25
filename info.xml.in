@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<module name="freedom-cas" disabled="no" version="@VERSION@" release="@RELEASE@" infopath="http://www.freedom-ecm.org/modules/freedom-cas/freedom-cas">
+
+  <description lang="en">CAS (Central Authentication Service) support for Freedom</description>
+
+  <requires>
+    <module name="freedom-networkuser" />
+    <module name="freedom-core" version="2.15.2" comp="ge" />
+  </requires>
+
+  <post-install>
+  </post-install>
+ 
+  <post-upgrade>
+  </post-upgrade>
+
+  <changelog>
+    <version number="0.0.1-1" date="2010-03-25">
+      <change title="Initial release" />
+    </version>
+  </changelog>
+
+</module>
