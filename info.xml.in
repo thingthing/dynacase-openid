@@ -8,10 +8,26 @@
     <module name="freedom-core" version="2.15.2" comp="ge" />
   </requires>
 
+  <parameters>
+    <param name="phpcas_url" label="phpCAS download URL" type="text" default="http://ftp.freedom-ecm.org/third-party/CAS-1.0.1.tgz" />
+  </parameters>
+
+  <pre-install>
+    <check type="syscommand" command="gunzip" />
+    <check type="syscommand" command="tar" />
+  </pre-install>
+  
+  <pre-upgrade>
+    <check type="syscommand" command="gunzip" />
+    <check type="syscommand" command="tar" />
+  </pre-upgrade>
+
   <post-install>
+    <download href="@phpcas_url" action="programs/phpcas_install"><label lang="en">Download and install phpCAS</label></download>
   </post-install>
- 
+  
   <post-upgrade>
+    <download href="@phpcas_url" action="programs/phpcas_install"><label lang="en">Download and install phpCAS</label></download>
   </post-upgrade>
 
   <changelog>

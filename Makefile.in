@@ -6,8 +6,6 @@ pubdir = @prefix@
 srcdir = @srcdir@
 applib = WHAT
 
-CAS_TGZ = CAS-1.0.1.tgz
-
 export pubdir utildir appname applib
 
 TAR = gtar
@@ -28,10 +26,13 @@ DISTFILES += $(SUBDIR) \
 $(pubdir)/$(appname): $(pubdir)
 	mkdir -p $(pubdir)/$(appname)
 
-$(pubdir)/$(appname)/CAS.php: $(pubdir)/$(appname) $(CAS_TGZ)
-	tar -C $(pubdir)/$(appname) --strip-components 1 -zxf $(CAS_TGZ) CAS-1.0.1/CAS.php
+$(pubdir)/$(appname)/.htaccess: htaccess $(pubdir)/$(appname)
+	cp $< $@
 
-$(pubdir)/$(appname)/CAS: $(pubdir)/$(appname) $(CAS_TGZ)
-	tar -C $(pubdir)/$(appname) --strip-components 1 -zxf $(CAS_TGZ) CAS-1.0.1/CAS
+$(pubdir)/programs: $(pubdir)
+	mkdir -p $(pubdir)/programs
 
-publish: $(pubdir)/$(appname)/CAS.php $(pubdir)/$(appname)/CAS
+$(pubdir)/programs/phpcas_install: programs/phpcas_install $(pubdir)/programs
+	cp $< $@
+
+publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/programs/phpcas_install
