@@ -32,7 +32,12 @@ $(pubdir)/$(appname)/.htaccess: htaccess $(pubdir)/$(appname)
 $(pubdir)/programs: $(pubdir)
 	mkdir -p $(pubdir)/programs
 
-$(pubdir)/programs/phpcas_install: programs/phpcas_install $(pubdir)/programs
+$(pubdir)/OPENID/OpenID.class.php: OPENID/OpenID.class.php $(pubdir)/$(appname)
+	cp $< $@
+	
+publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/OpenID.class.php
+
+$(pubdir)/OPENID/openID.php: OPENID/openID.php $(pubdir)/$(appname)
 	cp $< $@
 
-publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/programs/phpcas_install
+publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/openID.php

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<module name="freedom-cas" disabled="no" version="@VERSION@" release="@RELEASE@" infopath="http://www.freedom-ecm.org/modules/freedom-cas/freedom-cas">
+<module name="freedom-openid" disabled="no" version="@VERSION@" release="@RELEASE@" infopath="http://www.freedom-ecm.org/modules/freedom-openid/freedom-openid">
 
-  <description lang="en">CAS (Central Authentication Service) support for Freedom</description>
+  <description lang="en">OPENID support for Freedom</description>
 
   <requires>
     <module name="freedom-networkuser" />
@@ -9,7 +9,7 @@
   </requires>
 
   <parameters>
-    <param name="phpcas_url" label="phpCAS download URL" type="text" default="http://ftp.freedom-ecm.org/third-party/CAS-1.0.1.tgz" />
+    <param name="phpopenid_url" label="phpOPENID download URL" type="text" default="http://ftp.freedom-ecm.org/third-party/OPENID-1.0.1.tar.gz" />
   </parameters>
 
   <pre-install>
@@ -23,11 +23,11 @@
   </pre-upgrade>
 
   <post-install>
-    <download href="@phpcas_url" action="programs/phpcas_install"><label lang="en">Download and install phpCAS</label></download>
+    <download href="@phpopenid_url" action="programs/phpopenid_install"><label lang="en">Download and install phpOPENID</label></download>
   </post-install>
   
   <post-upgrade>
-    <download href="@phpcas_url" action="programs/phpcas_install"><label lang="en">Download and install phpCAS</label></download>
+    <download href="@phpopenid_url" action="programs/phpopenid_install"><label lang="en">Download and install phpOPENID</label></download>
   </post-upgrade>
 
   <changelog>
