@@ -34,10 +34,15 @@ $(pubdir)/programs: $(pubdir)
 
 $(pubdir)/OPENID/OpenID.class.php: OPENID/OpenID.class.php $(pubdir)/$(appname)
 	cp $< $@
-	
+
 publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/OpenID.class.php
 
 $(pubdir)/OPENID/openID.php: OPENID/openID.php $(pubdir)/$(appname)
 	cp $< $@
 
 publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/openID.php
+
+$(pubdir)/OPENID/Services: OPENID/Services $(pubdir)/$(appname)
+	cp -R $< $@
+
+publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/Services

@@ -23,9 +23,8 @@ Class                   openidAuthenticator extends Authenticator {
 			$session->close();
 			return FALSE;
 		}
-		$openid = new SimpleOpenID;
+		$openid = new SimpleOpenID($_GET['openid_identity']);
 		$username = $openid->SetUsername($_GET['openid_identity']);
-		$openid->SetIdentity($username);
 		$openid_validation_result = $openid->ValidateWithServer();
 		if ($openid_validation_result == false) {
 			error_log(__CLASS__."::".__FUNCTION__." "."Validation with openid failed");
@@ -67,12 +66,14 @@ Class                   openidAuthenticator extends Authenticator {
 	}
 
 	public function	askAuthentication() {
+		
 		if (!isset($_POST["openidSubmit"]))
 		{
 			error_log(__CLASS__."::".__FUNCTION__." ".sprintf("No submit"));
 			include_once("OPENID/openID.php");
 			exit(0);
 		}
+		
 		if (!preg_match("#^http://#", $_POST["id"]))
 		{
 			error_log(__CLASS__."::".__FUNCTION__." ".sprintf("Malformed Openid"));
@@ -80,8 +81,7 @@ Class                   openidAuthenticator extends Authenticator {
 			exit(0);
 		}
 
-		$openid = new SimpleOpenID;
-		$openid->SetIdentity($_POST['id']);
+		$openid = new SimpleOpenID($_POST['id']);
 		$openid->SetTrustRoot('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 		$openid->SetOptionalFields(array('nickname',
 				     'email',
@@ -97,7 +97,9 @@ Class                   openidAuthenticator extends Authenticator {
 			$error = $openid->GetError();
 			error_log("ERROR CODE: " . $error['code']);
 			error_log("ERROR DESCRIPTION: " . $error['description']);
-			exit(0);
+			echo "ERROR CODE: ". $error['code'] . "\n";
+			echo "ERROR DESCRIPTION: " . $error['description'];
+			die;
 		}
 		if (!$openid->GetOpenIDServer())
 		{
@@ -105,7 +107,7 @@ Class                   openidAuthenticator extends Authenticator {
 			$this->logout("");
 			return FALSE;
 		}
-		$openid->SetApprovedURL('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . '?getOpenID=' . $_POST["id"]);
+		$openid->SetApprovedURL('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 		$openid->Redirect();
 		error_log(__CLASS__."::".__FUNCTION__." ".sprintf("Redirection"));
 		return ;

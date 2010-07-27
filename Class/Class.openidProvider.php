@@ -31,8 +31,7 @@ Class openidProvider extends Provider {
 		$action->Set("",$core);
 		$action->user=new User("",1); //create user as admin
 
-		$openid = new SimpleOpenID;
-		$openid->SetIdentity($username);
+		$openid = new SimpleOpenID($username);
 		$userinfo = $openid->filterUserInfo($_GET);
 		$wu = new User();
 		if ($userinfo['firstname']) {
