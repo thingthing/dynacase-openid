@@ -4,15 +4,26 @@ include_once("WHAT/Class.Provider.php");
 
 Class openidProvider extends Provider {
 
+	/**
+	 * Validate credential
+	 * @see Class/Authenticator/providers/Provider::validateCredential()
+	 */
 	public function validateCredential($username, $password) {
 		return true;
 	}
 
-
+	/**
+	 * validate authorization
+	 * @see Class/Authenticator/providers/Provider::validateAuthorization()
+	 */
 	public function validateAuthorization($opt) {
 		return TRUE;
 	}
 
+	/**
+	 * Create freedom user with $username name
+	 * @param unknown_type $username
+	 */
 	public function initializeUser($username) {
 		@include_once('WHAT/Class.User.php');
 		@include_once('FDL/Class.Doc.php');
@@ -21,7 +32,7 @@ Class openidProvider extends Provider {
 
 		global $action;
 		$err = "";
-		
+
 		$CoreNull="";
 		$core = new Application();
 		$core->Set("CORE",$CoreNull);
@@ -32,6 +43,7 @@ Class openidProvider extends Provider {
 		$action->user=new User("",1); //create user as admin
 
 		$openid = new SimpleOpenID($username);
+		//get info from openid
 		$userinfo = $openid->filterUserInfo($_GET);
 		$wu = new User();
 		if ($userinfo['firstname']) {
@@ -40,11 +52,15 @@ Class openidProvider extends Provider {
 		else {
 			$wu->firstname='--';
 		}
-		if ($userinfo['fullname']) {
+		if ($userinfo['lastname']) {
 			$wu->lastname=$userinfo['fullname'];
 		}
-		else {
-			$wu->lastname='--';
+		elseif ($userinfo['fullname']){
+			$wu->lastname=$userinfo['fullname'];
+		}
+		else
+		{
+			$wu->lastname=$username;
 		}
 		$wu->mail=$userinfo['email'];
 		$wu->login=$username;

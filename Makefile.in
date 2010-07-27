@@ -42,7 +42,17 @@ $(pubdir)/OPENID/openID.php: OPENID/openID.php $(pubdir)/$(appname)
 
 publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/openID.php
 
-$(pubdir)/OPENID/Services: OPENID/Services $(pubdir)/$(appname)
+$(pubdir)/OPENID/openID.xml: OPENID/openID.xml $(pubdir)/$(appname)
+	cp $< $@
+
+publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/openID.xml
+
+$(pubdir)/OPENID/script.php: OPENID/script.php $(pubdir)/$(appname)
+	cp $< $@
+
+publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/script.php
+
+$(pubdir)/OPENID/Images: OPENID/Images $(pubdir)/$(appname)
 	cp -R $< $@
 
-publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/Services
+publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/Images

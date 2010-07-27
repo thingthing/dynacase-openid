@@ -3,71 +3,7 @@
  FREE TO USE
  Under License: GPLv3
  Simple OpenID PHP Class
-
- Some modifications by Eddie Roosenmaallen, eddie@roosenmaallen.com
-
- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
- This Class was written to make easy for you to integrate OpenID on your website.
- This is just a client, which checks for user's identity. This Class Requires CURL Module.
- It should be easy to use some other HTTP Request Method, but remember, often OpenID servers
- are using SSL.
- We need to be able to perform SSL Verification on the background to check for valid signature.
-
- HOW TO USE THIS CLASS:
- STEP 1)
- $openid = new SimpleOpenID;
- :: SET IDENTITY ::
- $openid->SetIdentity($_POST['openid_url']);
- :: SET RETURN URL ::
- $openid->SetApprovedURL('http://www.yoursite.com/return.php'); // Script which handles a response from OpenID Server
- :: SET TRUST ROOT ::
- $openid->SetTrustRoot('http://www.yoursite.com/');
- :: FETCH SERVER URL FROM IDENTITY PAGE ::  [Note: It is recomended to cache this (Session, Cookie, Database)]
- $openid->GetOpenIDServer(); // Returns false if server is not found
- :: REDIRECT USER TO OPEN ID SERVER FOR APPROVAL ::
-
- :: (OPTIONAL) SET OPENID SERVER ::
- $openid->SetOpenIDServer($server_url); // If you have cached previously this, you don't have to call GetOpenIDServer and set value this directly
-
- STEP 2)
- Once user gets returned we must validate signature
- :: VALIDATE REQUEST ::
- true|false = $openid->ValidateWithServer();
-
- ERRORS:
- array = $openid->GetError(); 	// Get latest Error code
-
- FIELDS:
- OpenID allowes you to retreive a profile. To set what fields you'd like to get use (accepts either string or array):
- $openid->SetRequiredFields(array('email','fullname','dob','gender','postcode','country','language','timezone'));
- or
- $openid->SetOptionalFields('postcode');
-
- IMPORTANT TIPS:
- OPENID as is now, is not trust system. It is a great single-sign on method. If you want to
- store information about OpenID in your database for later use, make sure you handle url identities
- properly.
- For example:
- https://steve.myopenid.com/
- https://steve.myopenid.com
- http://steve.myopenid.com/
- http://steve.myopenid.com
- ... are representing one single user. Some OpenIDs can be in format openidserver.com/users/user/ - keep this in mind when storing identities
-
- To help you store an OpenID in your DB, you can use function:
- $openid_db_safe = $openid->OpenID_Standarize($upenid);
- This may not be comatible with current specs, but it works in current enviroment. Use this function to get openid
- in one format like steve.myopenid.com (without trailing slashes and http/https).
- Use output to insert Identity to database. Don't use this for validation - it may fail.
-
  */
-
-/*
- * The Yadis library is necessary for OpenID 2.0 specifications.
- */
-
-include_once 'Services/Yadis/Yadis.php';
 
 Class SimpleOpenID
 {
@@ -96,7 +32,11 @@ Class SimpleOpenID
 			 "lastname",
 			 "suffix"
 			 );
-
+			 /**
+			  *
+			  * Set new openid object with identity
+			  * @param $identity
+			  */
 			 public function __construct($identity)
 			 {
 			 	if ( ! $identity) {
@@ -113,7 +53,12 @@ Class SimpleOpenID
 			 	$this->SetIdentity($identity);
 			 }
 
-			 function filterUserInfo($get)
+			 /**
+			  *
+			  * Filter user info in openid url
+			  * @param $get
+			  */
+			 public function filterUserInfo($get)
 			 {
 			 	$i = 0;
 			 	$ret = array();
@@ -126,27 +71,47 @@ Class SimpleOpenID
 			 	return ($ret);
 			 }
 
-			 function SetOpenIDServer($a)
+			 /**
+			  *
+			  * Set openid server url
+			  * @param $a
+			  */
+			 public function SetOpenIDServer($a)
 			 {
 			 	$this->URLs['openid_server'] = $a;
 			 }
 
-			 function SetTrustRoot($a)
+			 /**
+			  *
+			  * Set default url
+			  * @param $a
+			  */
+			 public function SetTrustRoot($a)
 			 {
-			 if (strchr($a, "index.php") !== FALSE) {
+			 	if (strchr($a, "index.php") !== FALSE) {
 			 		$a = substr($a, 0, strpos($a, "index.php"));
 			 	}
 			 	$this->URLs['trust_root'] = $a;
 			 }
 
-			 function SetCancelURL($a)
+			 /**
+			  *
+			  * Set cancel url
+			  * @param $a
+			  */
+			 public function SetCancelURL($a)
 			 {
 			 	$this->URLs['cancel'] = $a;
 			 }
 
-			 function SetApprovedURL($a)
+			 /**
+			  * Set return url
+			  *
+			  * @param $a
+			  */
+			 public function SetApprovedURL($a)
 			 {
-			 if (strchr($a, "index.php") !== FALSE) {
+			 	if (strchr($a, "index.php") !== FALSE) {
 			 		$a = substr($a, 0, strpos($a, "index.php"));
 			 	}
 			 	if (strstr($a, "?")) {
@@ -160,11 +125,15 @@ Class SimpleOpenID
 			 	else {
 			 		$a .= '?getOpenID=' . $_POST["id"];
 			 	}
-			 	error_log("approved url = " .$a);
 			 	$this->URLs['approved'] = $a;
 			 }
 
-			 function SetRequiredFields($a)
+			 /**
+			  *
+			  * Set required fields you want to get from openid(if these fields or not given, authentication will fail)
+			  * @param $a
+			  */
+			 public function SetRequiredFields($a)
 			 {
 			 	if (is_array($a)){
 			 		$this->fields['required'] = $a;
@@ -175,7 +144,12 @@ Class SimpleOpenID
 			 	}
 			 }
 
-			 function SetOptionalFields($a)
+			 /**
+			  *
+			  * Set optinal fields you want to get from openid(even if these fields are not given, authentification will work)
+			  * @param $a
+			  */
+			 public function SetOptionalFields($a)
 			 {
 			 	if (is_array($a))
 			 	{
@@ -187,7 +161,12 @@ Class SimpleOpenID
 			 	}
 			 }
 
-			 function SetUsername($identity)
+			 /**
+			  *
+			  * Set user username
+			  * @param $identity
+			  */
+			 public function SetUsername($identity)
 			 {
 			 	$res = array();
 			 	if (stripos($identity, 'http://') !== false)
@@ -207,8 +186,12 @@ Class SimpleOpenID
 			 	return $identity;
 			 }
 
-			 // Set Identity URL
-			 function SetIdentity($a)
+			 /**
+			  *
+			  * Set Identity URL
+			  * @param $a
+			  */
+			 public function SetIdentity($a)
 			 {
 			 	if ((stripos($a, 'http://') === false)
 			 	&& (stripos($a, 'https://') === false))
@@ -217,20 +200,23 @@ Class SimpleOpenID
 			 	}
 			 	// Google is not publishing its XRDS document yet, so the OpenID
 			 	// endpoint must be set manually for now.
+			 	//Does not work
 			 	if (stripos($a, 'gmail') OR stripos($a, 'google')) {
 			 		$a = "https://www.google.com/accounts/o8/id";
 			 	}
-			 	error_log("identity= ".$a);
 			 	$this->openid_url_identity = $a;
 			 }
 
+			 /**
+			  *
+			  * Check wich version of openid user is using and fill openid_service variable.
+			  * @param unknown_type $url
+			  */
 			 private function setServiceType($url)
 			 {
-			 	/*
-			 	 * Hopefully the provider is using OpenID 2.0 but let's check
-			 	 * the protocol version in order to handle backwards compatibility.
-			 	 * Probably not the most efficient method, but it works for now.
-			 	 */
+
+			 	//check the protocol version in order to handle backwards compatibility.
+
 			 	if (stristr($url, "2.0")) {
 			 		$ns = "http://specs.openid.net/auth/2.0";
 			 		$version = "2.0";
@@ -247,19 +233,33 @@ Class SimpleOpenID
 			 	$this->openid_version = $version;
 			 }
 
-			 // Get Identity
-			 function GetIdentity()
+			 /**
+			  *
+			  *  Get Identity
+			  */
+			 	
+			 public function GetIdentity()
 			 {
 			 	return $this->openid_url_identity;
 			 }
 
-			 function GetError()
+			 /**
+			  *
+			  * Get Error
+			  */
+			 public function GetError()
 			 {
 			 	$e = $this->error;
 			 	return array('code'=>$e[0],'description'=>$e[1]);
 			 }
 
-			 function ErrorStore($code, $desc = null)
+			 /**
+			  *
+			  * Store Error
+			  * @param $code
+			  * @param $desc
+			  */
+			 public function ErrorStore($code, $desc = null)
 			 {
 			 	$errs['OPENID_NOSERVERSFOUND'] = 'Cannot find OpenID Server TAG on Identity page.';
 			 	if ($desc == null)
@@ -267,7 +267,11 @@ Class SimpleOpenID
 			 	$this->error = array($code,$desc);
 			 }
 
-			 function IsError()
+			 /**
+			  *
+			  * Check if error is set
+			  */
+			 public function IsError()
 			 {
 			 	if (count($this->error) > 0)
 			 	return true;
@@ -275,7 +279,11 @@ Class SimpleOpenID
 			 	return false;
 			 }
 
-			 function splitResponse($response)
+			 /**
+			  * Split reponse got from openid server to put in a array
+			  * @param $response
+			  */
+			 public function splitResponse($response)
 			 {
 			 	$r = array();
 			 	$response = explode("\n", $response);
@@ -290,31 +298,13 @@ Class SimpleOpenID
 			 	}
 			 	return $r;
 			 }
-
-			 //To store openid info in database
-			 function OpenID_Standarize($openid_identity = null)
-			 {
-			 	if ($openid_identity === null){
-			 		$openid_identity = $this->openid_url_identity;
-			 	}
-			 	$u = parse_url(strtolower(trim($openid_identity)));
-			 	if (!isset($u['path']) || ($u['path'] == '/')) {
-			 		$u['path'] = '';
-			 	}
-			 	if(substr($u['path'],-1,1) == '/') {
-			 		$u['path'] = substr($u['path'], 0, strlen($u['path'])-1);
-			 	}
-			 	// If there is a query string, then use identity as is
-			 	if (isset($u['query'])) {
-			 		return $u['host'] . $u['path'] . '?' . $u['query'];
-			 	}
-			 	else {
-			 		return $u['host'] . $u['path'];
-			 	}
-			 }
-
-			 // converts associated array to URL Query String
-			 function array2url($arr)
+			 	
+			 /**
+			  *
+			  * converts associated array to URL Query String
+			  * @param $arr
+			  */
+			 public function array2url($arr)
 			 {
 			 	if (!is_array($arr)) {
 			 		return false;
@@ -327,41 +317,19 @@ Class SimpleOpenID
 			 	return $query;
 			 }
 
-			 function FSOCK_Request($url, $method="GET", $params = "")
-			 {
-			 	$fp = fsockopen("ssl://www.myopenid.com", 443, $errno, $errstr, 3); // Connection timeout is 3 seconds
-			 	if (!$fp)
-			 	{
-			 		$this->ErrorStore('OPENID_SOCKETERROR', $errstr);
-			 		return false;
-			 	}
-			 	else
-			 	{
-			 		$request = $method . " /server HTTP/1.0\r\n";
-			 		$request .= "User-Agent: Simple OpenID PHP Class (http://www.phpclasses.org/simple_openid)\r\n";
-			 		$request .= "Connection: close\r\n\r\n";
-			 		fwrite($fp, $request);
-			 		stream_set_timeout($fp, 4); // Connection response timeout is 4 seconds
-			 		$res = fread($fp, 2000);
-			 		$info = stream_get_meta_data($fp);
-			 		fclose($fp);
-			 		if ($info['timed_out']) {
-			 			$this->ErrorStore('OPENID_SOCKETTIMEOUT');
-			 		}
-			 		else {
-			 			return $res;
-			 		}
-			 	}
-			 }
-
-			 // Remember, SSL MUST BE SUPPORTED
-			 function CURL_Request($url, $method="GET", $params = "")
+			 /**
+			  *
+			  * form and executer curl request
+			  * @param unknown_type $url
+			  * @param unknown_type $method
+			  * @param unknown_type $params
+			  */
+			 public function CURL_Request($url, $method="GET", $params = "")
 			 {
 			 	if (is_array($params)) {
 			 		$params = $this->array2url($params);
 			 	}
 			 	$curl = curl_init($url . ($method == "GET" && $params != "" ? "?" . $params : ""));
-			 	//$err = curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 			 	$err = curl_setopt($curl, CURLOPT_HEADER, false);
 			 	$err = curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 			 	$err = curl_setopt($curl, CURLOPT_HTTPGET, ($method == "GET"));
@@ -369,7 +337,7 @@ Class SimpleOpenID
 			 	$err = curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 			 	$err = curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 			 	if ($err === FALSE){
-			 		error_log(__CLASS__."::".__FUNCTION__."Error got");
+			 		error_log(__CLASS__."::".__FUNCTION__."Curl error got");
 			 	}
 			 	if ($method == "POST")
 			 	{
@@ -388,7 +356,11 @@ Class SimpleOpenID
 			 	return $response;
 			 }
 
-			 function HTML2OpenIDServer($content)
+			 /**
+			  * transform html request in openid information
+			  * @param $content
+			  */
+			 public function HTML2OpenIDServer($content)
 			 {
 			 	$get = array();
 
@@ -403,29 +375,15 @@ Class SimpleOpenID
 			 	return $ret;
 			 }
 
-			 function GetOpenIDServer()
+			 /**
+			  *
+			  * Get openid server
+			  */
+			 public function GetOpenIDServer()
 			 {
-			 	//Try Yadis Protocol discovery first
-			 	$http_response = array();
-			 	$fetcher = Services_Yadis_Yadis::getHTTPFetcher();
-			 	$yadis_object = Services_Yadis_Yadis::discover($this->openid_url_identity, $http_response, $fetcher);
-
-			 	// Yadis object is returned if discovery is successful
-			 	if($yadis_object != NULL) {
-			 		 
-			 		$service_list  = $yadis_object->services();
-			 		$service_types = $service_list[0]->getTypes();
-			 		 
-			 		$servers   = $service_list[0]->getURIs();
-			 		$delegates = $service_list[0]->getElements('openid:Delegate');
-
-			 	}
-			 	// Else try HTML discovery
-			 	else {
 			 		$response = $this->CURL_Request($this->openid_url_identity);
 			 		list($servers, $delegates) = $this->HTML2OpenIDServer($response);
-			 	}
-			 	// If no servers were discovered by Yadis or by parsing HTML, error out
+			 	// If no servers were discovered by parsing HTML, error out
 			 	if (empty($servers))
 			 	{
 			 		error_log(__CLASS__."::".__FUNCTION__." OPENID_NOSERVERFOUND");
@@ -444,7 +402,10 @@ Class SimpleOpenID
 			 	return $servers[0];
 			 }
 
-			 function GetRedirectURL()
+			 /**
+			  * Get url for openid redirection
+			  */
+			 public function GetRedirectURL()
 			 {
 			 	$params = array();
 			 	$params['openid.return_to'] = urlencode($this->URLs['approved']);
@@ -468,16 +429,13 @@ Class SimpleOpenID
 			 	}
 			 	// User Info Request: Required data
 			 	if (isset($this->fields['required']) && ( ! empty($this->fields['required']))) {
-
 			 		// Set required params for Attribute Exchange (AX) protocol
 			 		$params['openid.ax.required']   = implode(',',$this->fields['required']);
-
 			 		foreach($this->fields['required'] as $field) {
 			 			if(array_key_exists($field,$this->types)) {
 			 				$params["openid.ax.type.$field"] = urlencode($this->arr_ax_types[$field]);
 			 			}
 			 		}
-
 			 		// Set required params for Simple Registration (SREG) protocol
 			 		$params['openid.sreg.required'] = implode(',',$this->fields['required']);
 			 	}
@@ -485,7 +443,6 @@ Class SimpleOpenID
 			 	if (isset($this->fields['optional']) && ( ! empty($this->fields['optional']))) {
 			 		// Set optional params for Attribute Exchange (AX) protocol
 			 		$params['openid.ax.if_available'] = implode(',',$this->fields['optional']);
-
 			 		foreach($this->fields['optional'] as $field) {
 			 			if(array_key_exists($field,$this->types)) {
 			 				$params["openid.ax.type.$field"] = urlencode($this->arr_ax_types[$field]);
@@ -498,24 +455,19 @@ Class SimpleOpenID
 			 	return $this->URLs['openid_server'] . $urlJoiner . $this->array2url($params);
 			 }
 
-			 function Redirect()
+			 /**
+			  * Redirect to openid provider
+			  */
+			 public function Redirect()
 			 {
 			 	$redirect_to = $this->GetRedirectURL();
-			 	if (headers_sent())
-			 	{
-			 		// Use JavaScript to redirect if content has been previously sent (not recommended, but safe)
-			 		echo '<script language="JavaScript" type="text/javascript">window.location=\'';
-			 		echo $redirect_to;
-			 		echo '\';</script>';
-			 	}
-			 	else
-			 	{
-			 		// Default Header Redirect
-			 		header('Location: ' . $redirect_to);
-			 	}
+			 	header('Location: ' . $redirect_to);
 			 }
 
-			 function ValidateWithServer()
+			 /**
+			  * Check with openid information with openid server
+			  */
+			 public function ValidateWithServer()
 			 {
 			 	$params = array(
 		    'openid.assoc_handle' => urlencode($_GET['openid_assoc_handle']),
@@ -540,7 +492,6 @@ Class SimpleOpenID
 			 	$response = $this->CURL_Request($openid_server,'POST',$params);
 			 	$data = $this->splitResponse($response);
 			 	if ($data['is_valid'] == "true") {
-			 		error_log(__CLASS__."::".__FUNCTION__." data ok return true");
 			 		return true;
 			 	}
 			 	else {
