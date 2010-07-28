@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<module name="freedom-openid" disabled="no" version="@VERSION@" release="@RELEASE@" infopath="http://www.freedom-ecm.org/modules/freedom-openid/freedom-openid">
+<module name="freedom-openid" disabled="no" version="@VERSION@" release="@RELEASE@" author="thing-leoh nicolas <thing-_n@epitech.net>">
 
+  <description lang="fr">Support OPENID pour freedom</description>
   <description lang="en">OPENID support for Freedom</description>
 
   <requires>
@@ -8,35 +9,21 @@
     <module name="freedom-core" version="2.15.2" comp="ge" />
   </requires>
 
-  <parameters>
-    <param name="phpopenid_url" label="phpOPENID download URL" type="text" default="http://ftp.freedom-ecm.org/third-party/OPENID-1.0.1.tar.gz" />
-  </parameters>
-
-  <pre-install>
-    <check type="syscommand" command="gunzip" />
-    <check type="syscommand" command="tar" />
-  </pre-install>
-  
-  <pre-upgrade>
-    <check type="syscommand" command="gunzip" />
-    <check type="syscommand" command="tar" />
-  </pre-upgrade>
-
-  <post-install>
-    <download href="@phpopenid_url" action="programs/phpopenid_install"><label lang="en">Download and install phpOPENID</label></download>
-  </post-install>
-  
-  <post-upgrade>
-    <download href="@phpopenid_url" action="programs/phpopenid_install"><label lang="en">Download and install phpOPENID</label></download>
-  </post-upgrade>
-
   <changelog>
-    <version number="0.0.2-1" date="2010-03-30">
-      <change title="Added support for downloading phpCAS source from third-party repo." />
-    </version>
-    <version number="0.0.1-1" date="2010-03-25">
-      <change title="Initial release" />
+    <version number="1.0" date="2010-07-28">
+    	<change title="Initial release />
     </version>
   </changelog>
-
+  
+   <pre-install>
+    <check type="phpfunction" function="curl_exec">
+      <help>Please install php5-curl before installing openid module</help>
+    </check>
+  </pre-install>
+  
+ <pre-update>
+    <check type="phpfunction" function="curl_exec">
+      <help>Please install php5-curl before updating openid module</help>
+    </check>
+  </pre-update>
 </module>

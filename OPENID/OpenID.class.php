@@ -40,13 +40,13 @@ Class SimpleOpenID
 			 public function __construct($identity)
 			 {
 			 	if ( ! $identity) {
-			 		$this->errorStore('OPENID_NOIDENTITY','No identity passed to Dope OpenID constructor.');
+			 		$this->errorStore('OPENID_NOIDENTITY','No identity passed to OpenID constructor.');
 			 		return FALSE;
 			 	}
 
-			 	// cURL is required for Dope OpenID to work.
+			 	// cURL is required for OpenID to work.
 			 	if ( ! function_exists('curl_exec')) {
-			 		die('Error: Dope OpenID requires the PHP cURL extension.');
+			 		die('Error: Freedom OpenID requires the PHP cURL extension.');
 			 	}
 
 			 	// Set user's identity.
@@ -198,12 +198,6 @@ Class SimpleOpenID
 			 	{
 			 		$a = 'http://'.$a;
 			 	}
-			 	// Google is not publishing its XRDS document yet, so the OpenID
-			 	// endpoint must be set manually for now.
-			 	//Does not work
-			 	if (stripos($a, 'gmail') OR stripos($a, 'google')) {
-			 		$a = "https://www.google.com/accounts/o8/id";
-			 	}
 			 	$this->openid_url_identity = $a;
 			 }
 
@@ -351,6 +345,9 @@ Class SimpleOpenID
 			 	else {
 			 		$this->ErrorStore('OPENID_CURL', curl_error($curl));
 			 		error_log(__CLASS__."::".__FUNCTION__."Error:". curl_error($curl));
+			 		$_GET['openid_mode'] = 'notvalid';
+			 		include_once("OPENID/openID.php");
+			 		exit();
 			 	}
 			 	curl_close($curl);
 			 	return $response;
@@ -381,8 +378,8 @@ Class SimpleOpenID
 			  */
 			 public function GetOpenIDServer()
 			 {
-			 		$response = $this->CURL_Request($this->openid_url_identity);
-			 		list($servers, $delegates) = $this->HTML2OpenIDServer($response);
+			 	$response = $this->CURL_Request($this->openid_url_identity);
+			 	list($servers, $delegates) = $this->HTML2OpenIDServer($response);
 			 	// If no servers were discovered by parsing HTML, error out
 			 	if (empty($servers))
 			 	{
@@ -412,43 +409,15 @@ Class SimpleOpenID
 			 	$params['openid.mode'] = 'checkid_setup';
 			 	$params['openid.identity'] = urlencode($this->openid_url_identity);
 			 	$params['openid.trust_root'] = urlencode($this->URLs['trust_root']);
+			 	//User info required data
 			 	if (isset($this->fields['required'])
 			 	&& (count($this->fields['required']) > 0))
 			 	{
 			 		$params['openid.sreg.required'] = implode(',',$this->fields['required']);
 			 	}
+			 	//User info optional data
 			 	if (isset($this->fields['optional']) && (count($this->fields['optional']) > 0))
 			 	{
-			 		$params['openid.sreg.optional'] = implode(',',$this->fields['optional']);
-			 	}
-			 	// If we're requesting user info from Google, it MUST be specified as "required"
-			 	// Will not work otherwise.
-			 	if (stristr($this->URLs['openid_server'], 'google.com') && $info_request == TRUE) {
-			 		$this->fields['required'] = array_unique(array_merge($this->fields['optional'], $this->fields['required']));
-			 		$this->fields['optional'] = array();
-			 	}
-			 	// User Info Request: Required data
-			 	if (isset($this->fields['required']) && ( ! empty($this->fields['required']))) {
-			 		// Set required params for Attribute Exchange (AX) protocol
-			 		$params['openid.ax.required']   = implode(',',$this->fields['required']);
-			 		foreach($this->fields['required'] as $field) {
-			 			if(array_key_exists($field,$this->types)) {
-			 				$params["openid.ax.type.$field"] = urlencode($this->arr_ax_types[$field]);
-			 			}
-			 		}
-			 		// Set required params for Simple Registration (SREG) protocol
-			 		$params['openid.sreg.required'] = implode(',',$this->fields['required']);
-			 	}
-			 	// User Info Request: Optional data
-			 	if (isset($this->fields['optional']) && ( ! empty($this->fields['optional']))) {
-			 		// Set optional params for Attribute Exchange (AX) protocol
-			 		$params['openid.ax.if_available'] = implode(',',$this->fields['optional']);
-			 		foreach($this->fields['optional'] as $field) {
-			 			if(array_key_exists($field,$this->types)) {
-			 				$params["openid.ax.type.$field"] = urlencode($this->arr_ax_types[$field]);
-			 			}
-			 		}
-			 		// Set optional params for Simple Registration (SREG) protocol
 			 		$params['openid.sreg.optional'] = implode(',',$this->fields['optional']);
 			 	}
 			 	$urlJoiner = (strstr($this->URLs['openid_server'], "?")) ? "&" : "?";

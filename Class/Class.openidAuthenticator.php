@@ -5,14 +5,21 @@ include_once("WHAT/Class.Authenticator.php");
 Class                   openidAuthenticator extends Authenticator {
 
 	public              $auth_session = null;
-/**
- * Function to check if user is authenticate. 
- * If not add if url openid add, get param from the openid url.
- * @see Class/Authenticator/Authenticator::checkAuthentication()
- */
+	/**
+	 * Function to check if user is authenticate.
+	 * If not add if url openid add, get param from the openid url.
+	 * @see Class/Authenticator/Authenticator::checkAuthentication()
+	 */
 	public function     checkAuthentication() {
 		include_once("OPENID/OpenID.class.php");
-
+		
+		if (isset($_GET['openid_mode'])) {
+			if ($_GET['openid_mode'] == "cancel") {
+				//User cancel the openid validation
+				$this->redirecturl();
+				return FALSE;
+			}
+		}
 		$session = $this->getAuthSession();
 		if ($session->read('username') != "") {
 			//Freedom user already connect
@@ -27,6 +34,7 @@ Class                   openidAuthenticator extends Authenticator {
 			$session->close();
 			return FALSE;
 		}
+
 		$openid = new SimpleOpenID($_GET['openid_identity']);
 		$username = $openid->SetUsername($_GET['openid_identity']);
 		$openid_validation_result = $openid->ValidateWithServer();
@@ -44,12 +52,14 @@ Class                   openidAuthenticator extends Authenticator {
 				return false;
 			}
 		}
+		$this->redirecturl();
 		return true;
 	}
-/**
- * Get the current session
- * 
- */
+
+	/**
+	 * Get the current session
+	 *
+	 */
 	public function     getAuthSession() {
 		if (!$this->auth_session) {
 			include_once('WHAT/Class.Session.php');
@@ -82,17 +92,10 @@ Class                   openidAuthenticator extends Authenticator {
 	 * @see Class/Authenticator/Authenticator::askAuthentication()
 	 */
 	public function	askAuthentication() {
-		
+
 		if (!isset($_POST["openidSubmit"]))
 		{
-			include_once("OPENID/openID.php");
-			exit(0);
-		}
-		
-		if (!preg_match("#^http://#", $_POST["openid_identifier"]))
-		{
-			error_log(__CLASS__."::".__FUNCTION__." ".sprintf("Malformed Openid"));
-			$this->logout("");
+			include_once($this->parms{'authurl'});
 			exit(0);
 		}
 
@@ -112,15 +115,24 @@ Class                   openidAuthenticator extends Authenticator {
 			$error = $openid->GetError();
 			error_log("ERROR CODE: " . $error['code']);
 			error_log("ERROR DESCRIPTION: " . $error['description']);
-			echo "ERROR CODE: ". $error['code'] . "\n";
-			echo "ERROR DESCRIPTION: " . $error['description'];
-			die;
+			return FALSE;
 		}
 		$openid->SetApprovedURL('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 		$openid->Redirect();
 		return ;
 	}
 
+	/**
+	 * Redirect to index
+	 */
+	public function redirecturl() {
+		$url = 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+		if (strpos($url, "getOpenID")!== FALSE) {
+			$url = substr($url, 0, strpos($url, "getOpenID") - 1);
+		}
+		header('Location: '. $url);
+		exit(0);
+	}
 	/**
 	 * Get user's password
 	 * @see Class/Authenticator/Authenticator::getAuthPw()

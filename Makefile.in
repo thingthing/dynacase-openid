@@ -13,7 +13,7 @@ GZIP_ENV = --best
 
 export targetdir PACKAGE
 
-SUBDIR = Class
+SUBDIR = Class OPENID
 
 pages_not_xml = info.xml
 pages_not_php = fam2po.php po2js.php
@@ -29,30 +29,3 @@ $(pubdir)/$(appname): $(pubdir)
 $(pubdir)/$(appname)/.htaccess: htaccess $(pubdir)/$(appname)
 	cp $< $@
 
-$(pubdir)/programs: $(pubdir)
-	mkdir -p $(pubdir)/programs
-
-$(pubdir)/OPENID/OpenID.class.php: OPENID/OpenID.class.php $(pubdir)/$(appname)
-	cp $< $@
-
-publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/OpenID.class.php
-
-$(pubdir)/OPENID/openID.php: OPENID/openID.php $(pubdir)/$(appname)
-	cp $< $@
-
-publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/openID.php
-
-$(pubdir)/OPENID/openID.xml: OPENID/openID.xml $(pubdir)/$(appname)
-	cp $< $@
-
-publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/openID.xml
-
-$(pubdir)/OPENID/script.php: OPENID/script.php $(pubdir)/$(appname)
-	cp $< $@
-
-publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/script.php
-
-$(pubdir)/OPENID/Images: OPENID/Images $(pubdir)/$(appname)
-	cp -R $< $@
-
-publish: $(pubdir)/$(appname)/.htaccess $(pubdir)/OPENID/Images

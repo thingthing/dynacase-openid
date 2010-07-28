@@ -82,7 +82,7 @@
 
 		var headRight = pdoc.createElement('div');
 		headRight.style[document.all ? 'styleFloat' : 'cssFloat'] = 'right';
-		headRight.innerHTML = '<a href="https://www.myopenid.com/signup?affiliate_id=14674" style="color:#fff;" target="_blank">Get OpenID</a>';
+		headRight.innerHTML = '<a href="https://www.myopenid.com/signup" style="color:#fff;" target="_blank">Get OpenID</a>';
 
 		var header = pdoc.createElement('div');
 		s = header.style; s.fontWeight = "bold"; s.color = "#fff";
