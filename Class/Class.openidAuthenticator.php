@@ -12,12 +12,14 @@ Class                   openidAuthenticator extends Authenticator {
 	 */
 	public function     checkAuthentication() {
 		include_once("OPENID/OpenID.class.php");
-		
+
 		if (isset($_GET['openid_mode'])) {
 			if ($_GET['openid_mode'] == "cancel") {
 				//User cancel the openid validation
-				$this->redirecturl();
-				return FALSE;
+				$redir_url = $this->parms{'authurl'} . '&openid_mode=cancel';
+				error_log('redir url cancel === ' . $redir_url);
+				header('Location: ' . $redir_url);
+				exit();
 			}
 		}
 		$session = $this->getAuthSession();
@@ -40,11 +42,22 @@ Class                   openidAuthenticator extends Authenticator {
 		$openid_validation_result = $openid->ValidateWithServer();
 		if ($openid_validation_result == false) {
 			error_log(__CLASS__."::".__FUNCTION__." "."Validation with openid failed");
+			$redir_url = $this->parms{'authurl'} . '&openid_mode=notvalid';
+			error_log('redir url === ' . $redir_url);
+			header('Location: ' . $redir_url);
 			$session->close();
 			return FALSE;
 		}
+		//If openid provider is gmail, useridentity would be the return url so i put the email instead for more readability
+		if (stripos($username, 'gmail') || stripos($username, 'google')) {
+			$userinfo = $openid->filterUserInfo($_GET);
+			if ($userinfo['email']) {
+				$username = $userinfo['email'];
+			}
+		}
 		$session->register('username', $username);
 		$session->register("OPENID_AUTH", true);
+		error_log('try to create user::'.$username);
 		//check if user exist on openid database
 		if (!$this->freedomUserExists($username)) {
 			//user doesn't exist in freedom database try to create it
@@ -93,15 +106,15 @@ Class                   openidAuthenticator extends Authenticator {
 	 */
 	public function	askAuthentication() {
 
-		if (!isset($_POST["openidSubmit"]))
+		if (!isset($_POST["submit"]))
 		{
-			include_once($this->parms{'authurl'});
+			header('Location: ' . $this->parms{'authurl'});
 			exit(0);
 		}
 
 		$openid = new SimpleOpenID($_POST['openid_identifier']);
 		$openid->SetTrustRoot('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-		$openid->SetOptionalFields(array('nickname',
+		$openid->SetOptionalInfo(array('nickname',
 				     'email',
 				     'fullname',
 				     'dob',
@@ -114,10 +127,13 @@ Class                   openidAuthenticator extends Authenticator {
 		{
 			$error = $openid->GetError();
 			error_log("ERROR CODE: " . $error['code']);
-			error_log("ERROR DESCRIPTION: " . $error['description']);
+			error_log("ERROR DESCRIPTION: " . $error['description']);;
+			$redir_url = $this->parms{'authurl'} . '&openid_mode=noserver';
+			error_log('redir url === ' . $redir_url);
+			header('Location: ' . $redir_url);
 			return FALSE;
 		}
-		$openid->SetApprovedURL('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+		$openid->setReturnURL('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 		$openid->Redirect();
 		return ;
 	}
@@ -127,9 +143,11 @@ Class                   openidAuthenticator extends Authenticator {
 	 */
 	public function redirecturl() {
 		$url = 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+		error_log('redirect to ::'.$url);
 		if (strpos($url, "getOpenID")!== FALSE) {
 			$url = substr($url, 0, strpos($url, "getOpenID") - 1);
 		}
+		error_log('after change redirect to ::'.$url);
 		header('Location: '. $url);
 		exit(0);
 	}
@@ -160,8 +178,8 @@ Class                   openidAuthenticator extends Authenticator {
 	public function     logout($redir_uri) {
 		$session = $this->getAuthSession();
 		$session->close();
-		if( $redir_uri == "" && array_key_exists('indexurl', $this->parms) ) {
-			header('Location: '.$this->parms{'indexurl'});
+		if( $redir_uri == "" && array_key_exists('authurl', $this->parms) ) {
+			header('Location: ' . $this->parms{'authurl'});
 		} else {
 			header('Location: '.$redir_uri);
 		}

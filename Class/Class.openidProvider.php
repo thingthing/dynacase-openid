@@ -37,7 +37,7 @@ Class openidProvider extends Provider {
 		$core = new Application();
 		$core->Set("CORE",$CoreNull);
 		$core->session=new Session();
-		$core->session->set();
+		$core->session->set(); // isn't in the other provider and mine bug without
 		$action=new Action();
 		$action->Set("",$core);
 		$action->user=new User("",1); //create user as admin
@@ -53,13 +53,12 @@ Class openidProvider extends Provider {
 			$wu->firstname='--';
 		}
 		if ($userinfo['lastname']) {
-			$wu->lastname=$userinfo['fullname'];
+			$wu->lastname=$userinfo['lastname'];
 		}
 		elseif ($userinfo['fullname']){
 			$wu->lastname=$userinfo['fullname'];
 		}
-		else
-		{
+		else {
 			$wu->lastname=$username;
 		}
 		$wu->mail=$userinfo['email'];
@@ -89,7 +88,6 @@ Class openidProvider extends Provider {
 			$core->session->close();
 			return $err;
 		}
-		error_log("Freedom user $username added (id=".$du->id.")");
 		if ( $this->parms{'dGroup'}!='') {
 			$gu = new_Doc($dbaccess, $this->parms{'dGroup'});
 			if ($gu->isAlive()) {
