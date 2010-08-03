@@ -29,7 +29,7 @@
     <XRD>
         <Service priority="0">
             <Type>http://specs.openid.net/auth/2.0/return_to</Type>
-            <URI>http://localhost/zoo/?getOpenID=http://google.com</URI>
+            <URI>http://localhost/zoo/?getOpenID=$_GET['openid_identity']</URI>
         </Service>
     </XRD>
 </xrds:XRDS>

@@ -11,7 +11,7 @@ Class                   openidAuthenticator extends Authenticator {
 	 * @see Class/Authenticator/Authenticator::checkAuthentication()
 	 */
 	public function     checkAuthentication() {
-		include_once("OPENID/OpenID.class.php");
+		include_once("OPENID/openid.class.php");
 
 		if (isset($_GET['openid_mode'])) {
 			if ($_GET['openid_mode'] == "cancel") {
@@ -109,12 +109,13 @@ Class                   openidAuthenticator extends Authenticator {
 		if (!isset($_POST["submit"]))
 		{
 			header('Location: ' . $this->parms{'authurl'});
+			//include_once($this->parms{'authurl'});
 			exit(0);
 		}
 
 		$openid = new SimpleOpenID($_POST['openid_identifier']);
-		$openid->SetTrustRoot('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-		$openid->SetOptionalInfo(array('nickname',
+		$openid->setTrustRoot('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+		$openid->setOptionalInfo(array('nickname',
 				     'email',
 				     'fullname',
 				     'dob',
@@ -123,18 +124,17 @@ Class                   openidAuthenticator extends Authenticator {
 				     'country',
 				     'language',
 				     'timezone'));
-		if (!$openid->GetOpenIDServer())
+		if (!$openid->getOpenIDServer())
 		{
 			$error = $openid->GetError();
 			error_log("ERROR CODE: " . $error['code']);
 			error_log("ERROR DESCRIPTION: " . $error['description']);;
 			$redir_url = $this->parms{'authurl'} . '&openid_mode=noserver';
-			error_log('redir url === ' . $redir_url);
 			header('Location: ' . $redir_url);
 			return FALSE;
 		}
 		$openid->setReturnURL('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-		$openid->Redirect();
+		$openid->redirect();
 		return ;
 	}
 

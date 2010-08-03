@@ -2,7 +2,7 @@
 include_once("WHAT/Class.openidAuthenticator.php");
 
 function login_openid(Action &$action) {
-	$action->parent->AddCssRef("OPENID:login_openid.css",true);
+	$action->parent->AddCssRef("AUTHENT:loginform.css",true);
 	//$action->parent->AddCssRef($action->GetLayoutFile("login_openid.css"),true); ==> layout statique
 	$action->parent->AddJsRef($action->GetParam("CORE_JSURL")."/resizeimg.js");
 	$action->parent->AddJsRef($action->GetParam("CORE_JSURL")."/geometry.js");
@@ -25,9 +25,16 @@ function login_openid(Action &$action) {
 	else {
 		$action->lay->set('CANCEL', false);
 	}
+	if (($_GET['openid_mode'] && $_GET['openid_mode'] == 'noversion')) {
+		$action->lay->set('NOVERSION', true);
+	}
+	else {
+		$action->lay->set('NOVERSION', false);
+	}
 	$action->lay->set('ERR_MESSAGE_SERVER', 'No openid server found for this identity');
 	$action->lay->set('ERR_MESSAGE_VALID', 'Not a valid openid');
 	$action->lay->set('ERR_MESSAGE_CANCEL', 'Request canceled');
+	$action->lay->set('ERR_MESSAGE_VERSION', 'Wrong openid version configuration please check your conf file');
 	$openid_providers = array();
 	$authtype = getAuthType();
 	$authproviderlist = getAuthProvider();

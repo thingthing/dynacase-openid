@@ -28,7 +28,7 @@ Class openidProvider extends Provider {
 		@include_once('WHAT/Class.User.php');
 		@include_once('FDL/Class.Doc.php');
 		@include_once('WHAT/Class.Session.php');
-		@include_once("OPENID/OpenID.class.php");
+		@include_once("OPENID/openid.class.php");
 
 		global $action;
 		$err = "";
