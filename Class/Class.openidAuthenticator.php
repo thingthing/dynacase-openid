@@ -48,8 +48,8 @@ Class                   openidAuthenticator extends Authenticator {
 			$session->close();
 			return FALSE;
 		}
-		//If openid provider is gmail, useridentity would be the return url so i put the email instead for more readability
-		if (stripos($username, 'gmail') || stripos($username, 'google')) {
+		//If openid provider is google or yahoo, useridentity would be the return url so we put the email instead for more readability
+		if (stripos($username, 'gmail') || stripos($username, 'google') || stripos($username, 'yahoo')) {
 			$userinfo = $openid->filterUserInfo($_GET);
 			if ($userinfo['email']) {
 				$username = $userinfo['email'];
@@ -57,7 +57,6 @@ Class                   openidAuthenticator extends Authenticator {
 		}
 		$session->register('username', $username);
 		$session->register("OPENID_AUTH", true);
-		error_log('try to create user::'.$username);
 		//check if user exist on openid database
 		if (!$this->freedomUserExists($username)) {
 			//user doesn't exist in freedom database try to create it
@@ -143,11 +142,9 @@ Class                   openidAuthenticator extends Authenticator {
 	 */
 	public function redirecturl() {
 		$url = 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-		error_log('redirect to ::'.$url);
 		if (strpos($url, "getOpenID")!== FALSE) {
 			$url = substr($url, 0, strpos($url, "getOpenID") - 1);
 		}
-		error_log('after change redirect to ::'.$url);
 		header('Location: '. $url);
 		exit(0);
 	}

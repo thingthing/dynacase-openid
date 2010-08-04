@@ -24,15 +24,15 @@ function trackEnter(evt)
     return true;
 }
 
-function login(aform, usermsg)
+function verify_login(aform, usermsg)
 {
   var user = aform.openid_identifier.value;
   if (user == "") {
     document.getElementById('msgerr').innerHTML  = usermsg;
     document.forms['loginform'].elements['openid_identifier'].focus(); 
-    return;
+    return false;
   }
-  aform.submit();
+  return true;
 }
 
 function aumilieu(eid) {
@@ -141,7 +141,7 @@ function gen_selector()
 
 		var popup = document.createElement('iframe');
 		popup.frameBorder = 0; popup.scrolling = 'no';
-		s = popup.style; s.display = 'none'; s.position = 'absolute';
+		s = popup.style; s.visibility = 'hidden'; s.position = 'absolute';
 		s.width = '300px'; s.height = '0px'; s.margin = '0px'; s.padding = '0px'; s.zIndex = 10000;
 		s.border = '0px';
 
@@ -208,6 +208,7 @@ function gen_selector()
 		footer.appendChild(nameLabel);
 		footer.appendChild(pdoc.createTextNode(" "))
 		footer.appendChild(nameTb);
+		
 		function Cell(grid, idx) 
 		{
 			this.grid = grid;
@@ -420,7 +421,7 @@ function gen_selector()
 		pbody.appendChild(grid.table);
 		pbody.appendChild(footer);
 		
-		showPopup();
+		//showPopup();
 		
 		function showPopup() 
 		{
@@ -463,13 +464,13 @@ function gen_selector()
 			x = Math.max(Math.min(x, xUpper), 0);
 
 			var s = popup.style; s.left = x + "px"; s.top = y + "px";
-			s.display = 'block'; s.height = (pbody.offsetHeight + 12) + "px";
+			s.visibility = 'visible'; s.height = (pbody.offsetHeight + 12) + "px";
 			var html = document.body.parentNode;
 		}
 		
 		function hidePopup() 
 		{
-			popup.style.display = 'none';
+			popup.style.visibility = 'hidden';
 		}
 
 		function cursorEnd(tb) 
@@ -498,7 +499,7 @@ function gen_selector()
 
 		btn.onclick = function(e) 
 		{
-			(popup.style.display == 'none') ? showPopup() : showPopup();
+			(popup.style.visibility == 'hidden') ? showPopup() : showPopup();
 			if (e) {e.cancelBubble = true;} /* safari */
 			return false;
 		}
@@ -569,7 +570,7 @@ function gen_selector()
 		{
 			try 
 			{
-				if (popup.style.display == 'block') 
+				if (popup.style.visibility == 'visible') 
 					{
 						showPopup();
 					}
@@ -585,7 +586,7 @@ function gen_selector()
 		{
 			try 
 			{
-				if (popup.style.display == 'block') 
+				if (popup.style.visibility == 'visible') 
 					{
 						showPopup();
 					}
@@ -620,7 +621,7 @@ function gen_selector()
 			}
 		if (orig.length == 0) 
 			{
-				oidTb.value = "Enter Open id or choose in list";
+				oidTb.value = "";
 			}
 
 		function createCookie(name,value,days) 
@@ -702,6 +703,7 @@ function gen_selector()
 
 function openid_selector() 
 {
+	[IF PROVIDER]
 	var oldOnLoad = window.onload;
 	window.onload = function(evt) 
 	{
@@ -714,6 +716,7 @@ function openid_selector()
 			return oldOnLoad && oldOnLoad(evt);
 		}
 	}
+	[ENDIF PROVIDER]
 }
 //-->
 
@@ -737,7 +740,7 @@ identifiant<br />
 </div>
 <div class="close"><a href="javascript:close_help()">fermer l'aide</a></div>
 </div>
-<form action="index.php" method="post" name="loginform" onsubmit="this.openid_identifier;">
+<form action="index.php" method="post" name="loginform" onsubmit="return verify_login(this, 'Your openid username is required')">
 <input type="hidden" name="openid_action" value="login" />
 <div id="authform" class="authmain">
 
@@ -782,9 +785,12 @@ identifiant<br />
 
 </form>
 <script>
+<!--
 addEvent(window,'load',centerZone);
 addEvent(window,'resize',centerZone);
 document.getElementById('zonehelp').style.visibility = 'hidden';
 openid_selector();
+//-->
 </script> 
+
 </div>

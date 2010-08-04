@@ -21,8 +21,6 @@ DISTFILES += $(SUBDIR) \
 
 $(pubdir)/$(appname): 
 	mkdir -p $(pubdir)/$(appname)
-	mkdir -p $(pubdir)/$(appname)/Services
-	mkdir -p $(pubdir)/$(appname)/Services/Yadis
-	cp Services/Yadis/* $(pubdir)/$(appname)/Services/Yadis
+	
 $(pubdir)/$(appname)/.htaccess: htaccess $(pubdir)/$(appname)
 	cp $< $@

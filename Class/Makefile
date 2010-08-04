@@ -6,6 +6,6 @@ $(pubdir)/$(applib):
 	mkdir -p $@
 
 $(pubdir)/$(applib)/%.php: %.php $(pubdir)/$(applib)
-	ln -s ../$(appname)/$< $@
+	ln -sf ../$(appname)/$< $@
 
 publish: $(pubdir)/$(applib) $(pages_fdl)

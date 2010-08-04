@@ -81,9 +81,6 @@ Class SimpleOpenID
 		}
 		include_once("WHAT/Class.openidAuthenticator.php");
 
-		// Set user's identity.
-		$this->setIdentity($identity);
-
 		//Set env variable
 		$this->openid1 = 1;
 		$this->openid2 = 2;
@@ -91,6 +88,8 @@ Class SimpleOpenID
 		$this->authproviderlist = getAuthProvider();
 		$this->class = new openidAuthenticator($this->authtype, $this->authproviderlist);
 		$this->findProviderInParms();
+		// Set user's identity.
+		$this->setIdentity($identity);
 	}
 
 	public function findProviderInParms() {
@@ -102,6 +101,7 @@ Class SimpleOpenID
 		}
 		if (!$this->version) {
 			error_log("No version found");
+			$this->version = $this->openid1;
 		}
 		elseif ($this->version != $this->openid2 && $this->version != $this->openid1) {
 			error_log($this->version);
@@ -461,6 +461,11 @@ Class SimpleOpenID
 		}
 		if (stripos($identity, 'gmail') || stripos($identity, 'google')) {
 			$identity = "https://www.google.com/accounts/o8/id";
+			$this->version = $this->openid2;
+		}
+		if (stripos($identity, 'yahoo')) {
+			$identity = "https://me.yahoo.com/";
+			$this->version = $this->openid2;
 		}
 		$this->openid_url_identity = $identity;
 	}
@@ -608,7 +613,7 @@ Class SimpleOpenID
 		if ($this->version == $this->openid1) {
 			$params['openid.trust_root'] = urlencode($this->URLs['trust_root']);
 			$params['openid.return_to'] = urlencode($this->URLs['approved']);
-				
+
 		}
 		elseif ($this->version == $this->openid2) {
 			$params['openid.return_to'] = urlencode($this->URLs['return']);
