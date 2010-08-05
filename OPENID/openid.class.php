@@ -79,6 +79,10 @@ Class SimpleOpenID
 		if ( ! function_exists('curl_exec')) {
 			die('Error: Freedom OpenID requires the PHP cURL extension.');
 		}
+
+		// Set user's identity.
+		$this->setIdentity($identity);
+
 		include_once("WHAT/Class.openidAuthenticator.php");
 
 		//Set env variable
@@ -88,8 +92,6 @@ Class SimpleOpenID
 		$this->authproviderlist = getAuthProvider();
 		$this->class = new openidAuthenticator($this->authtype, $this->authproviderlist);
 		$this->findProviderInParms();
-		// Set user's identity.
-		$this->setIdentity($identity);
 	}
 
 	public function findProviderInParms() {
@@ -438,9 +440,11 @@ Class SimpleOpenID
 				$trimmed_key = substr($key,strrpos($key,"_")+1);
 				if(stristr($key, 'openid_ext1_value') && isset($value[1])) {
 					$this->arr_userinfo[$trimmed_key] = $value;
+					error_log("value = ". $value);
 				}
 				if(stristr($key, 'sreg_') && array_key_exists($trimmed_key, $this->arr_ax_types)) {
 					$this->arr_userinfo[$trimmed_key] = $value;
+					error_log("value2 = ". $value);
 				}
 			}
 			return $this->arr_userinfo;
@@ -636,9 +640,9 @@ Class SimpleOpenID
 			$info_request = TRUE;
 		}
 
-		// If we're requesting user info from Google, it MUST be specified as "required"
+		// If we're requesting user info from Google opr yahoo, it MUST be specified as "required"
 		// Will not work otherwise.
-		if (stristr($this->URLs['openid_server'], 'google.com') && $info_request == TRUE) {
+		if ((stristr($this->URLs['openid_server'], 'google.com') || stristr($this->URLs['openid_server'], 'yahoo.com')) && $info_request == TRUE) {
 			$this->fields['required'] = array_unique(array_merge($this->fields['optional'], $this->fields['required']));
 			$this->fields['optional'] = array();
 		}
@@ -729,5 +733,24 @@ Class SimpleOpenID
 	public function getIdentity()
 	{
 		return $this->openid_url_identity;
+	}
+
+	/**
+	 * 
+	 * Get a good username for freedom
+	 * @param unknown_type $username
+	 */
+	public function getUsername($username) {
+		//If openid provider is google or yahoo, useridentity would be the return url so we put the email instead for more readability
+		if (stripos($username, 'gmail') || stripos($username, 'google') || stripos($username, 'yahoo')) {
+			$userinfo = $this->filterUserInfo($_GET);
+			if ($userinfo['email']) {
+				$username = $userinfo['email'];
+			}
+		}
+		if (stripos($username, '/')) {
+			$username = str_replace("/", ".", $username);
+		}
+		return $username;
 	}
 }

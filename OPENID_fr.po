@@ -1,0 +1,43 @@
+# French translations for freedom-openid package
+# Traductions françaises du paquet freedom-openid.
+# Copyright (C) 2010 THE freedom-openid'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the freedom-openid package.
+# Automatically generated, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: freedom-openid\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-08-05 15:41+0200\n"
+"PO-Revision-Date: 2010-08-05 15:45+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, c-format
+msgid "cannot create user %s: %s"
+msgstr "Impossible de créer l'utilisateur %s: %s"
+
+msgid "warning_name"
+msgstr "Nom d'utilisateur non renseigné"
+
+msgid "servernotfound"
+msgstr "Server openid non trouver pour cet identifiant"
+
+msgid "notvalid"
+msgstr "Identifiant openid non valide"
+
+msgid "cancel"
+msgstr "Demande de connexion avec le serveur openid annulé"
+
+msgid "noversion"
+msgstr "Version de openid non trouvée, veuillez vérifier votre fichier de configuration (dbaccess.php) et renseigner la version"
+
+msgid "Admin connexion"
+msgstr "Connexion administrateur"
+
+msgid "help"
+msgstr "Aide"

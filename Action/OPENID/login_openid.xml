@@ -760,16 +760,16 @@ identifiant<br />
 </table>
 </div>
 [IF NOSERVER]
-<div id="msgerr" class="message">[ERR_MESSAGE_SERVER]</div>
+<div id="msgerr" class="message">[TEXT:servernotfound]</div>
 [ENDIF NOSERVER]
 [IF NOTVALID]
-<div id="msgerr" class="message">[ERR_MESSAGE_VALID]</div>
+<div id="msgerr" class="message">[TEXT:notvalid]</div>
 [ENDIF NOTVALID]
 [IF CANCEL]
-<div id="msgerr" class="message">[ERR_MESSAGE_CANCEL]</div>
+<div id="msgerr" class="message">[TEXT:cancel]</div>
 [ENDIF CANCEL]
 [IF NOVERSION]
-<div id="msgerr" class="message">[ERR_MESSAGE_VERSION]</div>
+<div id="msgerr" class="message">[TEXT:noversion]</div>
 [ENDIF NOVERSION]
 <div class="buttons">
 <a href=[FREEDOMPROVIDER]>[TEXT:Admin connexion]</a>

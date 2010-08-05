@@ -31,10 +31,6 @@ function login_openid(Action &$action) {
 	else {
 		$action->lay->set('NOVERSION', false);
 	}
-	$action->lay->set('ERR_MESSAGE_SERVER', 'No openid server found for this identity');
-	$action->lay->set('ERR_MESSAGE_VALID', 'Not a valid openid');
-	$action->lay->set('ERR_MESSAGE_CANCEL', 'Request canceled');
-	$action->lay->set('ERR_MESSAGE_VERSION', 'Wrong openid version configuration please check your conf file');
 	$openid_providers = array();
 	$authtype = getAuthType();
 	$authproviderlist = getAuthProvider();

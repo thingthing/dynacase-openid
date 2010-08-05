@@ -47,13 +47,8 @@ Class                   openidAuthenticator extends Authenticator {
 			$session->close();
 			return FALSE;
 		}
-		//If openid provider is google or yahoo, useridentity would be the return url so we put the email instead for more readability
-		if (stripos($username, 'gmail') || stripos($username, 'google') || stripos($username, 'yahoo')) {
-			$userinfo = $openid->filterUserInfo($_GET);
-			if ($userinfo['email']) {
-				$username = $userinfo['email'];
-			}
-		}
+		
+		$username = $openid->getUsername($username);
 		$session->register('username', $username);
 		$session->register("OPENID_AUTH", true);
 		//check if user exist on openid database
