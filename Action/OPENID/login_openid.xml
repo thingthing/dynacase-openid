@@ -772,7 +772,9 @@ identifiant<br />
 <div id="msgerr" class="message">[TEXT:noversion]</div>
 [ENDIF NOVERSION]
 <div class="buttons">
+[IF HTMLINFO]
 <a href=[FREEDOMPROVIDER]>[TEXT:Admin connexion]</a>
+[ENDIF HTMLINFO]
 <a href="javascript:display_help()">[TEXT:help]</a>
 </div>
 </div>

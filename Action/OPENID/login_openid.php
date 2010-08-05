@@ -35,7 +35,13 @@ function login_openid(Action &$action) {
 	$authtype = getAuthType();
 	$authproviderlist = getAuthProvider();
 	$class = new openidAuthenticator($authtype, $authproviderlist);
-	$action->lay->set('FREEDOMPROVIDER', $class->parms{'htmlauthurl'});	
+	if (!$class->parms{'htmlauthurl'} || !$class->parms{'username'} || !$class->parms{'password'}) {
+		$action->lay->set('HTMLINFO', false);
+	}
+	else {
+		$action->lay->set('HTMLINFO', true);
+		$action->lay->set('FREEDOMPROVIDER', $class->parms{'htmlauthurl'});
+	}	
 	if (!$class->parms{'providers'}) {
 		$action->lay->set('PROVIDER', false);
 	}
