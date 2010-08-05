@@ -39,13 +39,14 @@ function login_openid(Action &$action) {
 	$authtype = getAuthType();
 	$authproviderlist = getAuthProvider();
 	$class = new openidAuthenticator($authtype, $authproviderlist);
+	$action->lay->set('FREEDOMPROVIDER', $class->parms{'htmlauthurl'});	
 	if (!$class->parms{'providers'}) {
 		$action->lay->set('PROVIDER', false);
 	}
 	else {
 		$action->lay->set('PROVIDER', true);
 		foreach ($class->parms{'providers'} as $k => $v) {
-			$openid_providers[$k]['DATA'] = '{' . $v . '}' . ',';
+			$openid_providers[$k]['DATA'] = '{' . $v . ',openid2: true}' . ',';
 		}
 		$action->lay->setBlockData("PROVIDERS", $openid_providers);
 	}

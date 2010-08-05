@@ -17,7 +17,6 @@ Class                   openidAuthenticator extends Authenticator {
 			if ($_GET['openid_mode'] == "cancel") {
 				//User cancel the openid validation
 				$redir_url = $this->parms{'authurl'} . '&openid_mode=cancel';
-				error_log('redir url cancel === ' . $redir_url);
 				header('Location: ' . $redir_url);
 				exit();
 			}
@@ -104,7 +103,6 @@ Class                   openidAuthenticator extends Authenticator {
 	 * @see Class/Authenticator/Authenticator::askAuthentication()
 	 */
 	public function	askAuthentication() {
-
 		if (!isset($_POST["submit"]))
 		{
 			header('Location: ' . $this->parms{'authurl'});

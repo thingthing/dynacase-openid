@@ -114,7 +114,7 @@ function gen_selector()
 		//		-icon = picture that appear next to the name of the provider
 		//		-id = unique id for the provider. Just input a random number
 		//		-website = adress of the website of the provider
-		//		-openid2 = true if it is not the default openid provider, false if not: if false, the provider will appear as default provider.
+		//		-openid2 = true if it is not the default openid provider, false otherwise: if false, the provider will appear as default provider.
 		//		-openid1 = true if you want the special field where you can input username.
 		var providers = [[BLOCK PROVIDERS][DATA][ENDBLOCK PROVIDERS]];
 		var oidTbId = window.idselector_input_id ? window.idselector_input_id : "openid_identifier";
@@ -243,8 +243,9 @@ function gen_selector()
 			icon.style.verticalAlign = "middle";
 			td.appendChild(icon);
 			td.appendChild(pdoc.createTextNode(" "));
-			td.appendChild(pdoc.createTextNode(provider ? provider.shortname : "Other OpenID"));
-
+			if (provider) {
+				td.appendChild(pdoc.createTextNode(provider.shortname));
+			}
 			this.selected = false;
 		}
 
@@ -267,24 +268,15 @@ function gen_selector()
 		{
 			this.grid.select(this);
 			provider = providers[this.idx];
-			if (this.idx == -1) 
+			if (provider["openid2"] && !provider["openid1"]) 
 				{
-					oidTb.value = 'http://';
 					oidTb.focus();
 					//setTimeout(hidePopup, 1);
-				}
+				} 
 			else 
 				{
-					if (provider["openid2"] && !provider["openid1"]) 
-						{
-							oidTb.focus();
-							//setTimeout(hidePopup, 1);
-						} 
-					else 
-						{
-							nameTb.focus();
-							nameTb.select();
-						}
+					nameTb.focus();
+					nameTb.select();
 				}
 		}
 
@@ -312,7 +304,7 @@ function gen_selector()
 			this.rows = [pdoc.createElement('tr'), pdoc.createElement('tr'),
 			pdoc.createElement('tr'), pdoc.createElement('tr')];
 
-			this.otherCell = new Cell(this, -1);
+			//this.otherCell = new Cell(this, -1);
 			var links = pdoc.createElement('td');
 			links.style.padding = "4px";
 			links.style.textAlign = "right";
@@ -322,7 +314,7 @@ function gen_selector()
 
 			var bottom_row = pdoc.createElement('tr');
 			bottom_row.style.borderTop = "1px solid #AAA";
-			bottom_row.appendChild(this.otherCell.td);
+			//bottom_row.appendChild(this.otherCell.td);
 			bottom_row.appendChild(links);
 
 			for (var j = 0; j < 4; j++) {this.tbody.appendChild(this.rows[j]);}
@@ -386,13 +378,13 @@ function gen_selector()
 							nameTb.style.visibility = 'hidden';
 							oidTb.value = provider['website'];
 						} 
-					else 
+					else
 						{
 							nameLabel.style.visibility = '';
 							nameTb.style.visibility = '';
 					
 							nameLabel.removeChild(nameLabel.firstChild);
-							var s = pdoc.createTextNode(provider.longname + " " + provider.usercalled + ":");
+							var s = pdoc.createTextNode(provider.longname + " Username:");
 							nameLabel.appendChild(s);
 							nameTb.style.backgroundImage = 'url(OPENID/Images/' + provider.icon + ')';
 							nameTb.value = "username";
@@ -489,9 +481,11 @@ function gen_selector()
 
 		function oidFocus() 
 		{
-			if (oidTb.value == "Enter Open id or choose in list") 
+			if (oidTb.value == "") 
 				{
 					oidTb.value = 'http://';
+					nameLabel.style.visibility = 'hidden';
+					nameTb.style.visibility = 'hidden';
 				}
 			cursorEnd(oidTb);
 			showPopup();
@@ -529,7 +523,8 @@ function gen_selector()
 			else if(e.which) {key = e.which;}
 			if (key != 13 && key != 9) 
 				{
-					grid.select(grid.otherCell);
+					nameLabel.style.visibility = 'hidden';
+					nameTb.style.visibility = 'hidden';
 				}
 		}
 
@@ -615,10 +610,10 @@ function gen_selector()
 				}
 			}*/
 
-		if (!grid.curr) 
+		/*if (!grid.curr) 
 			{
 				grid.select(grid.otherCell);
-			}
+			}*/
 		if (orig.length == 0) 
 			{
 				oidTb.value = "";
@@ -777,6 +772,7 @@ identifiant<br />
 <div id="msgerr" class="message">[ERR_MESSAGE_VERSION]</div>
 [ENDIF NOVERSION]
 <div class="buttons">
+<a href=[FREEDOMPROVIDER]>[TEXT:Admin connexion]</a>
 <a href="javascript:display_help()">[TEXT:help]</a>
 </div>
 </div>
