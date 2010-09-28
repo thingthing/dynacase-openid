@@ -42,7 +42,6 @@ Class                   openidAuthenticator extends Authenticator {
 		if ($openid_validation_result == false) {
 			error_log(__CLASS__."::".__FUNCTION__." "."Validation with openid failed");
 			$redir_url = $this->parms{'authurl'} . '&openid_mode=notvalid';
-			error_log('redir url === ' . $redir_url);
 			header('Location: ' . $redir_url);
 			$session->close();
 			return FALSE;

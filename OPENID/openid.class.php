@@ -106,7 +106,6 @@ Class SimpleOpenID
 			$this->version = $this->openid1;
 		}
 		elseif ($this->version != $this->openid2 && $this->version != $this->openid1) {
-			error_log($this->version);
 			$redir_url = $this->class->parms{'authurl'} . '&openid_mode=noversion';
 			header('Location: ' . $redir_url);
 			exit();
@@ -440,11 +439,9 @@ Class SimpleOpenID
 				$trimmed_key = substr($key,strrpos($key,"_")+1);
 				if(stristr($key, 'openid_ext1_value') && isset($value[1])) {
 					$this->arr_userinfo[$trimmed_key] = $value;
-					error_log("value = ". $value);
 				}
 				if(stristr($key, 'sreg_') && array_key_exists($trimmed_key, $this->arr_ax_types)) {
 					$this->arr_userinfo[$trimmed_key] = $value;
-					error_log("value2 = ". $value);
 				}
 			}
 			return $this->arr_userinfo;
@@ -505,7 +502,6 @@ Class SimpleOpenID
 			$this->errorStore('OPENID_CURL', curl_error($curl));
 			error_log(__CLASS__."::".__FUNCTION__."Error:". curl_error($curl));
 			$redir_url = $this->class->parms{'authurl'} . '&openid_mode=notvalid';
-			error_log('redir url === ' . $redir_url);
 			header('Location: ' . $redir_url);
 			exit();
 		}
