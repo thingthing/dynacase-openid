@@ -27,12 +27,12 @@ function trackEnter(evt)
 
 function verify_login(aform, usermsg)
 {
-  /*var user = aform.openid_identifier.value;
+  var user = aform.openid_identifier.value;
   if (user == "") {
     document.getElementById('msgerr').innerHTML  = usermsg;
     document.forms['loginform'].elements['openid_identifier'].focus(); 
     return false;
-  }*/
+  }
   return true;
 }
 
@@ -737,7 +737,7 @@ Pour vous connecter en admin, cliquez sur le lien "admin connexion"<br/>
 </div>
 <div class="close"><a href="javascript:close_help()">fermer l'aide</a></div>
 </div>
-<form action="index.php" method="post" name="loginform" onsubmit="return verify_login(this, 'Your openid username is required')">
+<form action="index.php" method="post" name="loginform" onsubmit="return verify_login(this.document.loginform, 'Your openid username is required')">
 <input type="hidden" name="openid_action" value="login" />
 <div id="authform" class="authmain">
 
