@@ -18,20 +18,21 @@ function trackEnter(evt)
     intKeyCode = window.event.keyCode;
 
   if (intKeyCode == 13) { // enter key
-    login(document.loginform,'[TEXT:warning_name]');
-    return false;
-  } else
-    return true;
+    return (verify_login(document.loginform,'[TEXT:warning_name]'));
+  }
+  else {
+  	return true;
+  }
 }
 
 function verify_login(aform, usermsg)
 {
-  var user = aform.openid_identifier.value;
+  /*var user = aform.openid_identifier.value;
   if (user == "") {
     document.getElementById('msgerr').innerHTML  = usermsg;
     document.forms['loginform'].elements['openid_identifier'].focus(); 
     return false;
-  }
+  }*/
   return true;
 }
 
