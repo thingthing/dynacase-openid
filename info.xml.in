@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
-<module name="freedom-openid" disabled="no" version="@VERSION@" release="@RELEASE@">
+<module name="@PACKAGE@" disabled="no" version="@VERSION@" release="@RELEASE@">
 
-  <description lang="fr">Support OPENID pour freedom</description>
-  <description lang="en">OPENID support for Freedom</description>
+  <description lang="fr">Support authentification OPENID pour dynacase-platform</description>
+  <description lang="en">OPENID authentification support for  dynacase-platform</description>
 
   <requires>
-    <module name="freedom-networkuser" />
-    <module name="freedom-core" version="2.15.2" comp="ge" />
+    <module name="dynacase-networkuser" />
   </requires>
 
   <changelog>

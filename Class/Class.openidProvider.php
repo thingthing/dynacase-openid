@@ -70,7 +70,7 @@ Class openidProvider extends Provider {
 		$err=$wu->Add();
 		if ($err != "") {
 			$core->session->close();
-			return sprintf(_("cannot create user %s: %s"),$username,$err);
+			return sprintf(_("openid:cannot create user %s: %s"),$username,$err);
 		}
 
 		include_once("FDL/Class.DocFam.php");
@@ -79,7 +79,7 @@ Class openidProvider extends Provider {
 		if (!$du->isAlive()) {
 			$err=$wu->delete();
 			$core->session->close();
-			return sprintf(_("cannot create user %s: %s"),$login,$err." (freedom)");
+			return sprintf(_("openid:cannot create user %s: %s"),$login,$err." (freedom)");
 		}
 		$du->setValue("us_whatid",$wu->id);
 		$err = $du->modify();
