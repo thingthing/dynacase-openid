@@ -1,7 +1,7 @@
-PACKAGE = freedom-openid
+PACKAGE = dynacase-openid
 VERSION = 0.0.0
-utildir=/home/thing-_n/anakeen/devtools/
-pubdir = /var/www/freedom3
+utildir=/home/eric/anakeen/devtools/
+pubdir = /var/www/dev
 srcdir = .
 appname = OPENID
 applib = WHAT

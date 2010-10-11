@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freedom-openid\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-05 15:41+0200\n"
-"PO-Revision-Date: 2010-08-05 15:45+0200\n"
+"POT-Creation-Date: 2010-10-11 09:40+0200\n"
+"PO-Revision-Date: 2010-10-11 09:41+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -18,26 +18,51 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
-msgid "cannot create user %s: %s"
+msgid "openid:cannot create user %s: %s"
 msgstr "Impossible de créer l'utilisateur %s: %s"
 
-msgid "warning_name"
-msgstr "Nom d'utilisateur non renseigné"
+msgid "openid:warning_name"
+msgstr "la saisie de votre nom est obligatoire"
 
-msgid "servernotfound"
-msgstr "Server openid non trouver pour cet identifiant"
+msgid "openid:servernotfound"
+msgstr "Server openid non trouvé pour cet identifiant"
 
-msgid "notvalid"
+msgid "openid:notvalid"
 msgstr "Identifiant openid non valide"
 
-msgid "cancel"
-msgstr "Demande de connexion avec le serveur openid annulé"
+msgid "openid:cancel"
+msgstr "Demande de connection avec le serveur openid annulé"
 
-msgid "noversion"
-msgstr "Version de openid non trouvée, veuillez vérifier votre fichier de configuration (dbaccess.php) et renseigner la version"
+msgid "openid:noversion"
+msgstr ""
+"Version de openid non trouvée, veuillez vérifier votre fichier de "
+"configuration (dbaccess.php) et renseigner la version"
 
-msgid "Admin connexion"
-msgstr "Connexion administrateur"
+msgid "openid:Admin connexion"
+msgstr "Connection administrateur"
 
-msgid "help"
+msgid "openid:help"
 msgstr "Aide"
+
+#~ msgid "cannot create user %s: %s"
+#~ msgstr "Impossible de créer l'utilisateur %s: %s"
+
+#~ msgid "servernotfound"
+#~ msgstr "Server openid non trouver pour cet identifiant"
+
+#~ msgid "notvalid"
+#~ msgstr "Identifiant openid non valide"
+
+#~ msgid "cancel"
+#~ msgstr "Demande de connexion avec le serveur openid annulé"
+
+#~ msgid "noversion"
+#~ msgstr ""
+#~ "Version de openid non trouvée, veuillez vérifier votre fichier de "
+#~ "configuration (dbaccess.php) et renseigner la version"
+
+#~ msgid "Admin connexion"
+#~ msgstr "Connexion administrateur"
+
+#~ msgid "help"
+#~ msgstr "Aide"

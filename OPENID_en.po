@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: freedom-openid\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-05 15:41+0200\n"
+"POT-Creation-Date: 2010-10-11 09:40+0200\n"
 "PO-Revision-Date: 2010-08-05 15:41+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,26 +18,49 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
-msgid "cannot create user %s: %s"
+msgid "openid:cannot create user %s: %s"
 msgstr ""
 
-msgid "warning_name"
-msgstr "You must input a username"
+msgid "openid:warning_name"
+msgstr ""
 
-msgid "servernotfound"
-msgstr "No openid server found for this identity"
+msgid "openid:servernotfound"
+msgstr ""
 
-msgid "notvalid"
-msgstr "Not a valid openid"
+msgid "openid:notvalid"
+msgstr ""
 
-msgid "cancel"
-msgstr "Request canceled"
+msgid "openid:cancel"
+msgstr ""
 
-msgid "noversion"
-msgstr "Wrong openid version configuration please check your configuration file(dbaccess.php)"
+msgid "openid:noversion"
+msgstr ""
 
-msgid "Admin connexion"
-msgstr "Admin connexion"
+msgid "openid:Admin connexion"
+msgstr ""
 
-msgid "help"
-msgstr "Help"
+msgid "openid:help"
+msgstr ""
+
+#~ msgid "servernotfound"
+#~ msgstr "No openid server found for this identity"
+
+#~ msgid "notvalid"
+#~ msgstr "Not a valid openid"
+
+#~ msgid "cancel"
+#~ msgstr "Request canceled"
+
+#~ msgid "noversion"
+#~ msgstr ""
+#~ "Wrong openid version configuration please check your configuration file"
+#~ "(dbaccess.php)"
+
+#~ msgid "Admin connexion"
+#~ msgstr "Admin connexion"
+
+#~ msgid "help"
+#~ msgstr "Help"
+
+#~ msgid "warning_name"
+#~ msgstr "You must input a username"

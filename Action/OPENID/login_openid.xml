@@ -18,7 +18,7 @@ function trackEnter(evt)
     intKeyCode = window.event.keyCode;
 
   if (intKeyCode == 13) { // enter key
-    return (verify_login(document.loginform,'[TEXT:warning_name]'));
+      return (verify_login(document.loginform,'[TEXT:openid:warning_name]'));
   }
   else {
   	return true;
@@ -762,22 +762,22 @@ Pour vous connecter en admin, cliquez sur le lien "admin connexion"<br/>
 </table>
 </div>
 [IF NOSERVER]
-<div id="msgerr" class="message">[TEXT:servernotfound]</div>
+<div id="msgerr" class="message">[TEXT:openid:servernotfound]</div>
 [ENDIF NOSERVER]
 [IF NOTVALID]
-<div id="msgerr" class="message">[TEXT:notvalid]</div>
+<div id="msgerr" class="message">[TEXT:openid:notvalid]</div>
 [ENDIF NOTVALID]
 [IF CANCEL]
-<div id="msgerr" class="message">[TEXT:cancel]</div>
+<div id="msgerr" class="message">[TEXT:openid:cancel]</div>
 [ENDIF CANCEL]
 [IF NOVERSION]
-<div id="msgerr" class="message">[TEXT:noversion]</div>
+<div id="msgerr" class="message">[TEXT:openid:noversion]</div>
 [ENDIF NOVERSION]
 <div class="buttons">
 [IF HTMLINFO]
-<a href=[FREEDOMPROVIDER]>[TEXT:Admin connexion]</a>
+<a href=[FREEDOMPROVIDER]>[TEXT:openid:Admin connexion]</a>
 [ENDIF HTMLINFO]
-<a href="javascript:display_help()">[TEXT:help]</a>
+<a href="javascript:display_help()">[TEXT:openid:help]</a>
 </div>
 </div>
 
