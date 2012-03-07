@@ -10,5 +10,5 @@ export appname
 include $(utildir)/PubRule
 publish:
 	mkdir -p $(pubdir)/$(appname)/Layout
-	cp -fu *.xml $(pubdir)/$(appname)/Layout
-	cp -fu *.php $(pubdir)/$(appname)
+	cp -f *.xml $(pubdir)/$(appname)/Layout
+	cp -f *.php $(pubdir)/$(appname)
