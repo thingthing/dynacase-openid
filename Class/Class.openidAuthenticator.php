@@ -100,7 +100,7 @@ Class openidAuthenticator extends Authenticator
      * If information got from form, verify information and redirect to openid
      * @see Class/Authenticator/Authenticator::askAuthentication()
      */
-    public function askAuthentication()
+    public function askAuthentication($args)
     {
         if (!isset($_POST["submit"])) {
             header('Location: ' . $this->parms{'authurl'});
@@ -131,7 +131,7 @@ Class openidAuthenticator extends Authenticator
         }
         $openid->setReturnURL('http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
         $openid->redirect();
-        return;
+        return true;
     }
     /**
      * Redirect to index
@@ -169,7 +169,7 @@ Class openidAuthenticator extends Authenticator
      * Logout
      * @see Class/Authenticator/Authenticator::logout()
      */
-    public function logout($redir_uri)
+    public function logout($redir_uri = "")
     {
         $session = $this->getAuthSession();
         $session->close();

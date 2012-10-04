@@ -21,6 +21,8 @@ DISTFILES += $(SUBDIR) \
 
 $(pubdir)/$(appname): 
 	mkdir -p $(pubdir)/$(appname)
-	
+
 $(pubdir)/$(appname)/.htaccess: htaccess $(pubdir)/$(appname)
 	cp $< $@
+
+publish: $(pubdir)/$(appname)/.htaccess

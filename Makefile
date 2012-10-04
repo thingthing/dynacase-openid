@@ -1,7 +1,7 @@
 PACKAGE = dynacase-openid
-VERSION = 0.0.0
-utildir=/home/eric/anakeen/devtools/
-pubdir = /var/www/dev
+VERSION = 0.0.2
+utildir=/home/nicolas/anakeen/devtools/
+pubdir = /usr/share/what
 srcdir = .
 appname = OPENID
 applib = WHAT
@@ -21,6 +21,8 @@ DISTFILES += $(SUBDIR) \
 
 $(pubdir)/$(appname): 
 	mkdir -p $(pubdir)/$(appname)
-	
+
 $(pubdir)/$(appname)/.htaccess: htaccess $(pubdir)/$(appname)
 	cp $< $@
+
+publish: $(pubdir)/$(appname)/.htaccess

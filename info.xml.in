@@ -1,28 +1,38 @@
 <?xml version="1.0"?>
 <module name="@PACKAGE@" disabled="no" version="@VERSION@" release="@RELEASE@" license="@LICENSE@">
 
-  <description lang="fr">Support authentification OPENID pour dynacase-platform</description>
-  <description lang="en">OPENID authentification support for  dynacase-platform</description>
+    <description lang="fr">Support authentification OPENID pour dynacase-platform</description>
+    <description lang="en">OPENID authentification support for dynacase-platform</description>
 
-  <requires>
-    <module name="dynacase-networkuser" />
-  </requires>
+    <requires>
+        <module name="dynacase-networkuser"/>
+    </requires>
 
-  <changelog>
-    <version number="1.0" date="2010-07-28">
-    	<change title="Initial release" />
-    </version>
-  </changelog>
-  
-   <pre-install>
-    <check type="phpfunction" function="curl_exec">
-      <help>Please install php5-curl before installing openid module</help>
-    </check>
-  </pre-install>
-  
- <pre-update>
-    <check type="phpfunction" function="curl_exec">
-      <help>Please install php5-curl before updating openid module</help>
-    </check>
-  </pre-update>
+    <changelog>
+        <version number="1.0" date="2010-07-28">
+            <change title="Initial release"/>
+        </version>
+    </changelog>
+
+    <pre-install>
+        <check type="phpfunction" function="curl_exec">
+            <help>Please install php5-curl before installing openid module</help>
+        </check>
+    </pre-install>
+
+    <pre-update>
+        <check type="phpfunction" function="curl_exec">
+            <help>Please install php5-curl before updating openid module</help>
+        </check>
+    </pre-update>
+
+    <post-install>
+        <process command="programs/record_application @APPNAME@"/>
+        <process command="programs/update_catalog"/>
+    </post-install>
+
+    <post-upgrade>
+        <process command="programs/record_application @APPNAME@"/>
+        <process command="programs/update_catalog"/>
+    </post-upgrade>
 </module>
